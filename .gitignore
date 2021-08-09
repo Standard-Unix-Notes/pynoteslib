@@ -143,5 +143,6 @@ dmypy.json
 cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
-__testing__
+__testing__/*
+!__testing__
 !__testing__/.env

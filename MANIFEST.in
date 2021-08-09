@@ -1,0 +1,21 @@
+graft docs
+graft src
+graft ci
+graft tests
+
+include tbump.toml
+include .coveragerc
+include .travis.yml
+include .readthedocs.yml
+include .pre-commit-config.yaml
+include AUTHORS.rst
+include CHANGELOG.rst
+include CONTRIBUTING.rst
+include LICENSE
+include README.rst
+include *.py
+include makefile
+recursive-include releasenotes *.yaml
+
+
+global-exclude *.py[cod] __pycache__/* *.so *.dylib
