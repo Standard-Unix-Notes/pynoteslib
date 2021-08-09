@@ -1,0 +1,4 @@
+# Editable Git install with no remote (noteslib==0.0.1)
+-e /home/ian/code/src
+python-gnupg==0.4.7
+toml==0.10.2
