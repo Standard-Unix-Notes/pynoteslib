@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+import pynoteslib
 
 #    'sphinx.ext.napoleon',
 extensions = [
@@ -20,7 +21,7 @@ project = 'noteslib'
 year = '2021'
 author = 'Ian Stanley'
 copyright = '{0}, {1}'.format(year, author)
-version = release = '0.0.1'
+version = release = pynoteslib.__version
 
 pygments_style = 'trac'
 templates_path = ['.']

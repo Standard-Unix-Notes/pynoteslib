@@ -2,7 +2,8 @@ import os
 import pytest
 from pynoteslib import *
 
-#import pudb; pu.db
+# import pudb; pu.db
+
 
 def test_get_config():
     cf = get_config()

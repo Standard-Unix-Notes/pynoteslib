@@ -43,13 +43,13 @@ _default_config = {
     "configfile": "",
 }
 
-os.environ['NOTESDIR'] = os.getcwd() + '/__testing__/notesdir'
+os.environ["NOTESDIR"] = os.getcwd() + "/__testing__/notesdir"
 
 
 GPGEXT = ".asc"
 
 
-def _init_dirs():         # pragma: no cover
+def _init_dirs():  # pragma: no cover
     """_init_dirs()
 
     Setup the NOTESDIR directory structure. _init_dirs() is called by create_config()
@@ -66,10 +66,10 @@ def _init_dirs():         # pragma: no cover
 
     notesdir = os.path.realpath(get_notesdir())
 
-    if not os.path.isdir(notesdir):
+    if not os.path.exists(notesdir):
         os.mkdir(notesdir, mode=0o700)
 
-    if not os.path.isdir(notesdir + "/Notes"):
+    if not os.path.exists(notesdir + "/Notes"):
         print(f"Default notebook does not exist, creating {notesdir + '/Notes'}")
         os.mkdir(notesdir + "/Notes", mode=0o700)
 
@@ -98,7 +98,7 @@ def create_config():
 def get_config():
     """get_config()
 
-    Reads configuration from the TOML file NOTESDIR/config. 
+    Reads configuration from the TOML file NOTESDIR/config.
     If 'config' file does not exist, calls create_config() to create
 
     :param: none
@@ -158,15 +158,12 @@ def get_notesdir():
     :rtype: str
     """
 
-    if "py.test" in sys.modules.keys():
-        return os.path.realpath(os.getcwd() + "/__testing__/notesdir")
-    else:  # pragma: no cover
-        if "notesdir" in os.environ:
-            notesdir = os.environ["notesdir"]
-        else:
-            notesdir = os.environ["HOME"] + "/.notes"
+    if "NOTESDIR" in os.environ:
+        notesdir = os.environ["NOTESDIR"]
+    else:
+        notesdir = os.environ["HOME"] + "/.notes"
 
-        return os.path.realpath(notesdir)
+    return os.path.realpath(notesdir)
 
 
 def config_file_exists():
@@ -475,7 +472,7 @@ def create_notebook(title):
     if not os.path.exists(notebookpath):
         os.mkdir(notebookpath, mode=0o700)
     else:
-        return False    # notebook already exists
+        return False  # notebook already exists
 
     return os.path.exists(notebookpath)
 
@@ -584,8 +581,6 @@ def import_note(filename):
                 mynote.ciphertext = ""
 
         return mynote
-
-
 
 
 def rename_note(oldname, newname):
@@ -993,7 +988,7 @@ class Notes:
         :return: True if self.ciphertext != ''
         """
 
-        return not self.ciphertext == ''
+        return not self.ciphertext == ""
 
     def encrypt(self):
         """encrypt()
@@ -1025,4 +1020,3 @@ class Notes:
         self.clear_ciphertext()
 
         return self.plaintext
-

@@ -1,6 +1,7 @@
 import os
 import pynoteslib as nl
 
+
 def test_save_ciphertext():
     conf = nl.get_config()
     n = nl.Notes(title="testing CT save")
@@ -12,6 +13,6 @@ def test_save_ciphertext():
     assert "testing_CT_save.asc" in noteslist
 
     filepath = nl.get_note_fullpath("testing_CT_save.asc")
-    assert filepath == nl.get_notesdir()+"/Notes/testing_CT_save.asc"
+    assert filepath == nl.get_notesdir() + "/Notes/testing_CT_save.asc"
 
-    os.remove(nl.get_note_fullpath('testing_CT_save.asc', 'Notes'))
+    os.remove(nl.get_note_fullpath("testing_CT_save.asc", "Notes"))

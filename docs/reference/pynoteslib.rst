@@ -1,5 +1,5 @@
 pynoteslib
-========
+==========
 
 .. testsetup::
 

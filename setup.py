@@ -1,7 +1,11 @@
 import setuptools
 
+__version = '0.0.2'
+
 with open('README.rst', 'r') as fh:
     long_description = fh.read()
+
+
 
 # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
 classifiers=[ 
@@ -23,7 +27,7 @@ classifiers=[
 
 setuptools.setup(
     name='pynoteslib',
-    version='0.0.1',
+    version=__version,
     license='MIT',
     description='Library of classes and functions for GPG encrypted notes in multiple notebooks',
     long_description=long_description,
