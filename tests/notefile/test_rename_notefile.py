@@ -1,20 +1,22 @@
 import os
+
 import pynoteslib as nl
 
-TESTKEY = 'A692697DCC57084C4E87D66C7D34402EBB3EB284'
+TESTKEY = "A692697DCC57084C4E87D66C7D34402EBB3EB284"
+
 
 def test_rename_notefile():
     cf = nl.get_config()
-    cf['gpgkey'] = TESTKEY
+    cf["gpgkey"] = TESTKEY
     nl.write_config(cf)
-    my = nl.Notes(title='before rename note', plaintext='Hello World')
+    my = nl.Notes(title="before rename note", plaintext="Hello World")
     my.encrypt()
     my.save_ciphertext()
     assert os.path.exists(nl.get_note_fullpath(my.filename))
 
-    nl.rename_note('before_rename_note.asc', 'after rename note')
+    nl.rename_note("before_rename_note.asc", "after rename note")
 
-    assert os.path.exists(nl.get_note_fullpath('after_rename_note.asc'))
-    assert not nl.rename_note('DOESNT_EXIST', 'DOES_EXIST')
+    assert os.path.exists(nl.get_note_fullpath("after_rename_note.asc"))
+    assert not nl.rename_note("DOESNT_EXIST", "DOES_EXIST")
 
-    os.remove(nl.get_note_fullpath('after_rename_note.asc'))
+    os.remove(nl.get_note_fullpath("after_rename_note.asc"))
