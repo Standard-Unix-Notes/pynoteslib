@@ -17,23 +17,14 @@ Full documentation can be found at
 https://pynoteslib.readthedocs.io/en/latest/
 """
 
-# TODO: add pytest in checks for unittest
-
-import toml
+import datetime
 import os
 import sys
 import shutil
-import datetime
 import tarfile
+import toml
 import gnupg  # see https://docs.red-dove.com/python-gnupg/
 
-"""
-Note the hardcoded 'gpgkey' included in _default_config
-- Under unittest conditions this will be returned
-  by get_default_gpg_key()
-- Under normal operating conditions get_default_gpg_key will
-  return the first private key it finds
-"""
 _default_config = {
     "gpgkey": "A692697DCC57084C4E87D66C7D34402EBB3EB284",
     "spelling": "none",
@@ -114,8 +105,8 @@ def get_config():
     if not config_file_exists():
         create_config()
 
-    with open(get_config_file(), "r") as f:
-        return toml.load(f)
+    with open(get_config_file(), "r") as config:
+        return toml.load(config)
 
 
 def write_config(conf):
@@ -132,7 +123,6 @@ def write_config(conf):
 
     """
 
-    # TODO write error handler for
     with open(get_config_file(), "w") as configf:
         toml.dump(conf, configf)
         return True
@@ -204,10 +194,11 @@ def get_default_gpg_key():
 
     if "py.test" in sys.modules.keys():
         return _default_config["gpgkey"]
-    else:  # pragma: no cover
-        gpg = gnupg.GPG(gnupghome="/home/ian/.gnupg")
-        private_keys = gpg.list_keys(True)
-        return private_keys[0]["keyid"]
+
+    # pragma: no cover
+    gpg = gnupg.GPG(gnupghome="/home/ian/.gnupg")
+    private_keys = gpg.list_keys(True)
+    return private_keys[0]["keyid"]
 
 
 def backup(conf):
@@ -222,10 +213,9 @@ def backup(conf):
     :rtype: bool
     """
 
-    # TODO Fixup to work after refactoring
-    t = datetime.datetime.now()
+    now = datetime.datetime.now()
     conf = get_config()
-    backupfile = f"{conf['notesdir']}/../notes_backup_{t.strftime('%Y%b%d_%H%M')}.tar"
+    backupfile = f"{conf['notesdir']}/../notes_backup_{now.strftime('%Y%b%d_%H%M')}.tar"
 
     try:
         tar = tarfile.open(backupfile, "w")
@@ -287,8 +277,8 @@ def default_notebook(notebook):
     if os.path.exists(nb_fullpath):
         conf["default"] = notebook
         return write_config(conf)
-    else:
-        return False
+
+    return False
 
 
 def use_notebook(notebook=""):
@@ -353,8 +343,8 @@ def get_notes(notebook=""):
 
     if os.path.exists(notebook):
         return os.listdir(notebook)
-    else:
-        return []
+
+    return []
 
 
 def new_key(newkey):
@@ -381,12 +371,12 @@ def new_key(newkey):
     conf["gpgkey"] = newkey
     write_config(conf)
 
-    for nb in get_notebooks():
-        for note in get_notes(notebook=nb):
-            n = Notes(filename=note)
-            n.decrypt()
-            n.encrypt()
-            n.save_ciphertext()
+    for notebook in get_notebooks():
+        for note in get_notes(notebook=notebook):
+            target = Notes(filename=note)
+            target.decrypt()
+            target.encrypt()
+            target.save_ciphertext()
     return True
 
 
@@ -441,9 +431,9 @@ def get_note_fullpath(note, notebook=""):
 
     conf = get_config()
     if notebook == "":
-        return conf["notesdir"] + "/" + conf["use"] + "/" + change_spaces(note)
-    else:
-        return conf["notesdir"] + "/" + notebook + "/" + change_spaces(note)
+        notebook = conf["use"]
+
+    return conf["notesdir"] + "/" + notebook + "/" + change_spaces(note)
 
 
 def change_spaces(string):
@@ -505,10 +495,9 @@ def rename_notebook(oldtitle, newtitle):
     topath = get_fullpath(change_spaces(newtitle))
 
     if os.path.exists(frompath):
-        os.rename(frompath, topath)
-        return True
-    else:
-        return False
+        return os.rename(frompath, topath)
+
+    return False
 
 
 def duplicate_notebook(oldtitle, newtitle):
@@ -531,9 +520,8 @@ def duplicate_notebook(oldtitle, newtitle):
 
     if os.path.exists(frompath) and not os.path.exists(topath):
         return shutil.copytree(frompath, topath)
-        return True
-    else:
-        return False
+
+    return False
 
 
 def delete_notebook(title):
@@ -591,6 +579,8 @@ def import_note(filename):
                 mynote.ciphertext = ""
 
         return mynote
+
+    return None
 
 
 def rename_note(oldname, newname):
@@ -668,8 +658,8 @@ def delete_note(filename):
 
     if os.path.exists(filename):
         return os.remove(filename)
-    else:
-        return False
+
+    return False
 
 
 def copy_to_notebook(filename, notebook):
@@ -770,10 +760,10 @@ class Notes:
         self.title = change_spaces(title)
         self.filename = change_spaces(filename)
 
-        cf = get_config()
-        _gpghome = cf["HOME"] + "/.gnupg"
+        _config = get_config()
+        _gpghome = _config["HOME"] + "/.gnupg"
         self.gpghandle = gnupg.GPG(gnupghome=_gpghome)
-        self.gpgkey = cf["gpgkey"]
+        self.gpgkey = _config["gpgkey"]
 
         if filename == "":
             self.set_filename(self.title)
@@ -781,7 +771,10 @@ class Notes:
             self.load_note(self.filename)
 
     def __repr__(self):
-        return f"['title': '{self.title}', 'filename': '{self.filename}', 'ciphertext': '{self.ciphertext}', 'plaintext': '{self.plaintext}',]"  # NOQA
+        return (
+            f"['title': '{self.title}', 'filename': '{self.filename}', "
+            + f"'ciphertext': '{self.ciphertext}', 'plaintext': '{self.plaintext}',]"
+        )
 
     def add_extension(self):
         """add_extension()
@@ -846,32 +839,33 @@ class Notes:
 
         return self.filename
 
-    def set_plaintext(self, pt):
-        """set_plaintext(pt)
+    def set_plaintext(self, plaintext):
+        """set_plaintext(plaintext)
 
-        Sets self.plaintext = pt & self.ciphertext = ''
+        Sets self.plaintext = plaintext & self.ciphertext = ''
 
-        :param pt:                  String containing plaintext
-        :type pt:
+        :param plaintext:                  String containing plaintext
+        :type plaintext:
 
         :return: none
         """
 
-        self.plaintext = pt
+        self.plaintext = plaintext
         self.clear_ciphertext()
 
-    def set_ciphertext(self, ct):
-        """set_ciphertext(ct)
+    def set_ciphertext(self, ciphertext):
+        """set_ciphertext(ciphertext)
 
-        Sets self.ciphertext to ct and  self.plaintext = ''. Appends .asc to filename
+        Sets self.ciphertext to ciphertext and
+        self.plaintext = ''. Appends .asc to filename
 
-        :param ct: String containing the ciphertext
-        :type ct: str
+        :param ciphertext: String containing the ciphertext
+        :type ciphertext: str
 
         :return: none
         """
 
-        self.ciphertext = ct
+        self.ciphertext = ciphertext
         self.clear_plaintext()
         self.add_extension()
 
@@ -912,7 +906,6 @@ class Notes:
         else:
             self.set_filename(os.path.splitext(self.filename)[0] + GPGEXT)
 
-        # TODO add exception handling
         with open(get_note_fullpath(self.filename), "w") as outp:
             outp.write(self.ciphertext)
 
@@ -931,7 +924,6 @@ class Notes:
         else:
             self.set_filename(os.path.splitext(self.filename)[0])
 
-        # TODO add exception handling
         with open(get_note_fullpath(self.title), "w") as outp:
             outp.write(self.plaintext)
 
@@ -945,7 +937,6 @@ class Notes:
         :return: none
         """
 
-        # TODO add exception handling
         with open(get_note_fullpath(self.filename), "r") as outp:
             self.ciphertext = outp.read()
             self.clear_plaintext()
@@ -960,7 +951,6 @@ class Notes:
         :return: none
         """
 
-        # TODO add exception handling
         with open(get_note_fullpath(self.title), "r") as outp:
             self.plaintext = outp.read()
             self.clear_ciphertext()

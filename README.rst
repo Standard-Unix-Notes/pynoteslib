@@ -1,13 +1,13 @@
-========
-NOTESLIB
-========
+==========
+PYNOTESLIB
+==========
 
-**Noteslib** is a library of functions and classes to assist in building apps to
+**PyNoteslib** is a library of functions and classes to assist in building apps to
 manage GPG encrypted notes.
 
 It is based upon an earlier project of mine *Standard unix Notes* which was a set of bourne shell scripts that implemented an easy way to manage gpg encrypted notes.
 
-Noteslib follows the same structure 
+Pynoteslib follows the same structure 
 
 
 Overview
