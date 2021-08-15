@@ -4,16 +4,17 @@ PYNOTESLIB the Python library implementation of Standard Unix Notes.
 It implements the notes() class and a number of functions to manipulate
 notebooks and configuration.
 
-NOTES allows the user to have multiple notebooks and even a default notebook.
-The initial notebook is called simply 'Notes' and all notes created or imported
-will default to this notebook.
+NOTES allows the user to have multiple notebooks and even a default
+notebook.  The initial notebook is called simply 'Notes' and all notes
+created or imported will default to this notebook.
 
-The user may create additional notebooks at any time and choose to USE a preferred
-notebook where all future notes will be created until the user chooses to USE
-another notebook. The user can quickly switch back to a DEFAULT notebook by not
-specifying which notebook to USE.
+The user may create additional notebooks at any time and choose to USE
+a preferred notebook where all future notes will be created until the
+user chooses to USE another notebook. The user can quickly switch back
+to a DEFAULT notebook by not specifying which notebook to USE.
 
-Full documentation can be found at https://pynoteslib.readthedocs.io/en/latest/
+Full documentation can be found at
+https://pynoteslib.readthedocs.io/en/latest/ 
 """
 
 # TODO: add pytest in checks for unittest
@@ -24,6 +25,8 @@ import sys
 import shutil
 import datetime
 import tarfile
+
+#'Programming Language :: Python :: 3 :: Only',
 import gnupg  # see https://docs.red-dove.com/python-gnupg/
 
 """
@@ -52,10 +55,12 @@ GPGEXT = ".asc"
 def _init_dirs():  # pragma: no cover
     """_init_dirs()
 
-    Setup the NOTESDIR directory structure. _init_dirs() is called by create_config()
+    Setup the NOTESDIR directory structure. _init_dirs() is called by
+    create_config()
 
     1.  This function gets the base NOTESDIR from get_notedir() which in
-        turn examines the environment variable for NOTESDIR else uses ~/.notes
+        turn examines the environment variable for NOTESDIR else uses
+        ~/.notes
     2.  Creates NOTESDIR directory
     3.  Creates first Notebook 'NOTESDIR/Notes/'
 
@@ -77,7 +82,8 @@ def _init_dirs():  # pragma: no cover
 def create_config():
     """create_config()
 
-    Create directory structure under NOTESDIR and TOML config file NOTESDIR/config
+    Create directory structure under NOTESDIR and TOML config file
+    NOTESDIR/config
 
     :param: none
 
@@ -117,7 +123,8 @@ def get_config():
 def write_config(conf):
     """write_config(conf)
 
-    Writes app configuration to TOML file NOTESDIR/config (see _default_config as a sample structure)
+    Writes app configuration to TOML file NOTESDIR/config (see
+    _default_config as a sample structure)
 
     :param conf: Dictionary containing configuration data
     :type: dict
@@ -185,11 +192,11 @@ def get_default_gpg_key():
 
     Locates the first private key in the users GPG keyring
 
-    Under testing conditions it returns the test@pynoteslib GPG key shown
-    in _default_config['gpgkey'] to use in testing
+    Under testing conditions it returns the test@pynoteslib GPG key
+    shown in _default_config['gpgkey'] to use in testing
 
-    In normal conditions it returns the first private gpgkey found in the
-    user's keyring
+    In normal conditions it returns the first private gpgkey found in
+    the user's keyring
 
     :param: none
 
@@ -264,12 +271,14 @@ def get_use_notebook():
 
 def default_notebook(notebook):
     """default_notebook(notebook)  Set the default notebook
-    (use_notebook() defaults to the DEFAULT notebook if '' instead of a notebook title)
+    (use_notebook() defaults to the DEFAULT notebook if '' instead of
+    a notebook title)
 
     :param notebook: notebook to set as default
     :type notebook: str
 
-    :return: Returns True on success of write_config() with updated configuration
+    :return: Returns True on success of write_config() with updated
+    configuration
     :rtype: bool
     """
 
@@ -287,8 +296,8 @@ def default_notebook(notebook):
 def use_notebook(notebook=""):
     """use_notebook([notebook])
 
-    Reads config file and returns the DEFAULT notebook.
-    If no notebook is specified then the USE notebook is set to the DEFAULT notebook
+    Reads config file and returns the DEFAULT notebook.  If no notebook
+    is specified then the USE notebook is set to the DEFAULT notebook
 
     :param notebook: Title of notebook to USE, optional
     :type notebook: str
@@ -354,12 +363,13 @@ def new_key(newkey):
     """new_key(GPG_keyID)
 
     Change encryption key for all notes. Traverses filesystem in
-    NOTESDIR/[all notebooks]. Decrypts and re-encrypts with specified newkey
+    NOTESDIR/[all notebooks]. Decrypts and re-encrypts with specified
+    newkey
 
     :param newkey: New valid gpg privakey keyid
     :type newkey: str
 
-    :returns :      Returns True on re-encryption; False on invalid private key
+    :return: Returns True on re-encryption; False on invalid private key
     :rtype: bool
     """
 
@@ -385,7 +395,8 @@ def new_key(newkey):
 def validate_gpg_key(gpgkeyid):
     """validate_gpg_key(gpgkeyid)
 
-    Validates the specified gpgkeyid is a private key in the user's keyring
+    Validates the specified gpgkeyid is a private key in the user's
+    keyring
 
     :param: none
 
@@ -406,7 +417,7 @@ def get_fullpath(name):
 
     Return full pathname of passed parameter
 
-    :param name: A notebook, filename ('config' file) or expr ('Work' + filename)
+    :param name: A notebook, filename (eg. 'config') or expression`
     :type name: str
 
     :return: Returns full path for 'name' UNDER the NOTESDIR
@@ -420,7 +431,8 @@ def get_fullpath(name):
 def get_note_fullpath(note, notebook=""):
     """get_use_fullpath(note, [notebook])
 
-    Returns the full pathname of a note within the currently USE'd Notebook
+    Returns the full pathname of a note within the currently USE'd
+    Notebook
 
     :param note: The title (or filename) of a note
     :type: str
