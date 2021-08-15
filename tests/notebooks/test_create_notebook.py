@@ -3,7 +3,7 @@ import pynoteslib as nl
 
 
 def test_create_notebook():
-    cf = nl.get_config()
+    nl.get_config()
     assert nl.create_notebook("testCreateNB")
     assert os.path.exists(nl.get_fullpath("testCreateNB"))
 

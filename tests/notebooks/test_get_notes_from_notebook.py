@@ -3,7 +3,7 @@ import pynoteslib as nl
 
 
 def test_get_notes_from_notebook():
-    cf = nl.get_config()
+    nl.get_config()
     assert nl.create_notebook("testgetnotesNB")
 
     nl.use_notebook(notebook="testgetnotesNB")

@@ -3,7 +3,7 @@ import pynoteslib as nl
 
 
 def test_duplicate_notebook():
-    cf = nl.get_config()
+    nl.get_config()
     assert nl.create_notebook("testdupone")
     assert nl.duplicate_notebook("testdupone", "testduptwo")
     assert os.path.exists(nl.get_fullpath("testduptwo"))

@@ -1,4 +1,3 @@
-import pytest
 import os
 import pynoteslib as nl
 
@@ -15,7 +14,7 @@ def test_new_key():
     message = "This is some text to test new_key()"
     n1 = nl.Notes(title="testing newkey")
     n1.set_plaintext(message)
-    ct = n1.encrypt()
+    n1.encrypt()
     n1.save_ciphertext()
     assert os.path.exists(nl.get_note_fullpath(n1.filename))
 

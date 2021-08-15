@@ -3,7 +3,7 @@ import pynoteslib as nl
 
 
 def test_load_plaintext():
-    conf = nl.get_config()
+    nl.get_config()
     n1 = nl.Notes(title="testing PT save")
     n1.set_plaintext("This is some text")
     n1.save_plaintext()

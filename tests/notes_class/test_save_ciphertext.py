@@ -3,7 +3,7 @@ import pynoteslib as nl
 
 
 def test_save_ciphertext():
-    conf = nl.get_config()
+    nl.get_config()
     n = nl.Notes(title="testing CT save")
     n.set_ciphertext("%% GI&THJhO&GyoIyuOBy")
     n.save_ciphertext()

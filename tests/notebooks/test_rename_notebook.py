@@ -3,7 +3,7 @@ import pynoteslib as nl
 
 
 def test_rename_notebook():
-    cf = nl.get_config()
+    nl.get_config()
     assert nl.create_notebook("testRenameOne")
     assert os.path.exists(nl.get_fullpath("testRenameOne"))
     nl.rename_notebook("testRenameOne", "testRenameTwo")
