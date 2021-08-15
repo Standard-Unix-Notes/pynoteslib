@@ -1,12 +1,10 @@
 import setuptools
 
-__version = "0.0.2"
-
 with open("README.rst", "r") as fh:
     long_description = fh.read()
 
 
-# complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
+# complete list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
 # 'Development Status :: 5 - Production/Stable',
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -24,7 +22,7 @@ classifiers = [
 
 setuptools.setup(
     name="pynoteslib",
-    version=__version,
+    version=0.0.2,
     license="MIT",
     description="Library of classes/functions for GPG encrypted notes",
     long_description=long_description,
@@ -38,9 +36,9 @@ setuptools.setup(
     python_requires=">=3.7",
     classifiers=classifiers,
     project_urls={
-        "Documentation": "https://pynoteslib.readthedocs.io/",
-        "Changelog": "https://pynoteslib.readthedocs.io/en/latest/changelog.html",
-        "Issue Tracker": "https://github.com/Standard-Unix-Notes/pynoteslib/issues",
+      "Documentation": "https://pynoteslib.readthedocs.io/",
+      "Changelog": "https://pynoteslib.readthedocs.io/en/latest/changelog.html",
+      "Issue Tracker": "https://github.com/Standard-Unix-Notes/pynoteslib/issues",
     },
     keywords=[
         "gnupg",
@@ -59,6 +57,8 @@ setuptools.setup(
             "pytest>=3.7",
             "wheel>=0.36.2",
             "black>=21.0",
+            "bump2version~=1.0.1"
+            "flake8>=3.9.2",
         ],
         "docs": [
             "ReText",

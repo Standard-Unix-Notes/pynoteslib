@@ -14,7 +14,7 @@ user chooses to USE another notebook. The user can quickly switch back
 to a DEFAULT notebook by not specifying which notebook to USE.
 
 Full documentation can be found at
-https://pynoteslib.readthedocs.io/en/latest/ 
+https://pynoteslib.readthedocs.io/en/latest/
 """
 
 # TODO: add pytest in checks for unittest
@@ -25,8 +25,6 @@ import sys
 import shutil
 import datetime
 import tarfile
-
-#'Programming Language :: Python :: 3 :: Only',
 import gnupg  # see https://docs.red-dove.com/python-gnupg/
 
 """
@@ -75,7 +73,7 @@ def _init_dirs():  # pragma: no cover
         os.mkdir(notesdir, mode=0o700)
 
     if not os.path.exists(notesdir + "/Notes"):
-        print(f"Default notebook does not exist, creating {notesdir + '/Notes'}")
+        print(f"Creating Default notebook {notesdir + '/Notes'}")
         os.mkdir(notesdir + "/Notes", mode=0o700)
 
 
