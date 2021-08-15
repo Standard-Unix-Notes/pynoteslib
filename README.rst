@@ -48,11 +48,7 @@ Overview
     :alt: Supported versions
     :target: https://pypi.org/project/pynoteslib
 
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/pynoteslib.svg
-    :alt: Supported implementations
-    :target: https://pypi.org/project/pynoteslib
-
-.. |commits-since| image:: https://img.shields.io/github/commits-since/Standard-Unix-Notes/pynoteslib/v0.0.1.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/Standard-Unix-Notes/pynoteslib/v0.0.2.svg
     :alt: Commits since latest release
     :target: https://github.com/Standard-Unix-Notes/pynoteslib/compare/v0.0.1...master
 
