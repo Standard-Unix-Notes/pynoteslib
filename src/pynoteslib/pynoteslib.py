@@ -476,8 +476,7 @@ def create_notebook(title):
     :rtype: bool
     """
 
-    notebookname = change_spaces(title)
-    notebookpath = get_fullpath(title)
+    notebookpath = get_fullpath(change_spaces(title))
 
     if not os.path.exists(notebookpath):
         os.mkdir(notebookpath, mode=0o700)
@@ -579,7 +578,8 @@ def import_note(filename):
 
         if _ext == GPGEXT:
 
-            # load cyphertext  -real edge case (why would they import an encrypted note?)
+            # load cyphertext - edge case
+            # importing an already encrypted note
             with open(mynote.filename, "r") as outp:  # pragma: no cover
                 mynote.ciphertext = outp.read()
                 mynote.plaintext = ""
@@ -734,12 +734,11 @@ class Notes:
     Attributes:
 
         title       title of note
-        filename    filename of note. If specified at object creation, the instance will load from the specified filename from inside the USE'd notebook
+        filename    filename of note
         ciphertext  string containing the ciphertext of note
         plaintext   string containing the plaintext of note
 
         NB only one of either ciphertext or plaintext should be set at any time.
-        _ftitle, _fext      filename and extension used in object creation only and not updated after creation (internal only)
     """
 
     def __init__(self, title="", plaintext="", ciphertext="", filename=""):
@@ -753,7 +752,7 @@ class Notes:
             Note(filename='my note filename.asc')
             Note(filename='my note filename')
 
-        :param title: Title for note (filename will be derived from title), default to ''
+        :param title: Note title (filename derived from title), default to ''
         :type title: str, optional
 
         :param plaintext: Plaintext of note, default to ''
@@ -782,7 +781,7 @@ class Notes:
             self.load_note(self.filename)
 
     def __repr__(self):
-        return f"['title': '{self.title}', 'filename': '{self.filename}', 'ciphertext': '{self.ciphertext}', 'plaintext': '{self.plaintext}',]"
+        return f"['title': '{self.title}', 'filename': '{self.filename}', 'ciphertext': '{self.ciphertext}', 'plaintext': '{self.plaintext}',]"  # NOQA
 
     def add_extension(self):
         """add_extension()
