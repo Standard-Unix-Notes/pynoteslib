@@ -57,8 +57,9 @@ setuptools.setup(
             "pytest>=3.7",
             "wheel>=0.36.2",
             "black>=21.0",
-            "bump2version~=1.0.1"
+            "bump2version~=1.0.1",
             "flake8>=3.9.2",
+            "isort>=5.9.3",
         ],
         "docs": [
             "ReText",
