@@ -19,11 +19,12 @@ https://pynoteslib.readthedocs.io/en/latest/
 
 import datetime
 import os
-import sys
 import shutil
+import sys
 import tarfile
-import toml
+
 import gnupg  # see https://docs.red-dove.com/python-gnupg/
+import toml
 
 _default_config = {
     "gpgkey": "A692697DCC57084C4E87D66C7D34402EBB3EB284",

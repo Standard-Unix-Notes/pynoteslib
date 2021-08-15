@@ -9,7 +9,12 @@ jobs:
       uses: actions/checkout@v2
 
     - name: linting
-      run: isort .
+      uses: alexanderdamiani/pylinter@v1.3.0
+      with:
+        python-root: '.'
+        flake8-flags: ''
+        mypy-flags: ''
+        fail-on-isort: false
 
     - name: commit isort changes
       run: |

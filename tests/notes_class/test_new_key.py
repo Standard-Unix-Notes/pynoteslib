@@ -1,4 +1,5 @@
 import os
+
 import pynoteslib as nl
 
 TESTKEY1 = "A692697DCC57084C4E87D66C7D34402EBB3EB284"
