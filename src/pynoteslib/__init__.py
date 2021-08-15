@@ -1,2 +1,2 @@
-__version = "0.2.0"
+__version = "0.3.0"
 # from pynoteslib.pynoteslib import *
