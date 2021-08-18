@@ -22,7 +22,7 @@ classifiers = [
 
 setuptools.setup(
     name="pynoteslib",
-    version="0.2.0",
+    version="0.3.0",
     license="MIT",
     description="Library of classes/functions for GPG encrypted notes",
     long_description=long_description,
