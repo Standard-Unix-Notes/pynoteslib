@@ -2,10 +2,8 @@
 from __future__ import unicode_literals
 
 import os
+import sys
 
-import pynoteslib
-
-#    'sphinx.ext.napoleon',
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
@@ -13,17 +11,21 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.extlinks',
     'sphinx.ext.ifconfig',
+    'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
 ]
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'noteslib'
+project = 'pynoteslib'
 year = '2021'
 author = 'Ian Stanley'
 copyright = '{0}, {1}'.format(year, author)
-version = release = pynoteslib.__version
+version = release = '0.3.0'
+sys.path.insert(0,os.path.abspath('../pynoteslib'))
 
+# next line turns on documenting __init__
+autoclass_content = 'both'
 pygments_style = 'trac'
 templates_path = ['.']
 extlinks = {

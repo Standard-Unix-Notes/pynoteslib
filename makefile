@@ -1,5 +1,6 @@
+.DEFAULT_GOAL = docs
 
-DOCS=$(shell find docs *.rst  -name \*.rst)
+#DOCS=$(shell find docs *.rst  -name \*.rst)
 
 test:	clean mktestdir
 	pytest  --cov-config=.coveragerc --cov=pynoteslib  tests/
@@ -7,10 +8,10 @@ test:	clean mktestdir
 build:
 	python setup.py bdist_wheel
 
-docs:	$(DOCS)
+docs:
 	@mkdir -p dist/docs
 	sphinx-build -E   -b html docs dist/docs
-	sphinx-build -b linkcheck docs dist/docs
+	#sphinx-build -b linkcheck docs dist/docs
 
 publish:  build
 	python3 -m twine upload  dist/pynoteslib-0.0.2-py3-none-any.whl
@@ -24,12 +25,6 @@ clean:
 
 tree:
 	tree -a __testing__/
-
-importkeys:
-	-gpg --import gpgkeys/*
-	echo A692697DCC57084C4E87D66C7D34402EBB3EB284:6: | gpg --import-ownertrust
- 	echo FE326B58CDD40DF70FEAB2722822B15BB44A9055:6: | gpg --import-ownertrust
-
 localinstall:
 	pip install -e .
 
@@ -43,9 +38,15 @@ devinstall:
 	pip install -e .[dev] .[docs]
 
 black:	reformatlib reformattests
-	
+
 reformatlib:
 	black src/*.py
 
 reformattests:
 	black tests/*.py
+
+importkeys:
+	-gpg --import gpgkeys/*
+	(echo 'A692697DCC57084C4E87D66C7D34402EBB3EB284:6:' | gpg --import-ownertrust)
+	(echo 'FE326B58CDD40DF70FEAB2722822B15BB44A9055:6:' | gpg --import-ownertrust)
+

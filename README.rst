@@ -7,7 +7,7 @@ manage GPG encrypted notes.
 
 It is based upon an earlier project of mine *Standard unix Notes* which was a set of bourne shell scripts that implemented an easy way to manage gpg encrypted notes.
 
-Pynoteslib follows the same structure 
+Pynoteslib follows the same structure
 
 
 Overview
@@ -26,7 +26,7 @@ Overview
       - | |travis|
         |
     * - package
-      - | |version| |wheel| |supported-versions| |supported-implementations|
+      - | |version| |wheel| |supported-versions|
         | |commits-since|
 .. |docs| image:: https://readthedocs.org/projects/pynoteslib/badge/?style=flat
     :target: https://pynoteslib.readthedocs.io/

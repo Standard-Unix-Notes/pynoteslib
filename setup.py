@@ -31,8 +31,8 @@ setuptools.setup(
     author_email="iandstanley@gmail.com",
     url="https://github.com/Standard-Unix-Notes/pynoteslib",
     py_modules=["pynoteslib"],
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    package_dir={"": "pynoteslib"},
+    packages=setuptools.find_packages(where="pynoteslib"),
     python_requires=">=3.7",
     classifiers=classifiers,
     project_urls={

@@ -1,9 +1,11 @@
-pynoteslib
-==========
+pynoteslib package
+==================
 
-.. testsetup::
-
-    from pynoteslib import *
+pynoteslib module
+-----------------
 
 .. automodule:: pynoteslib
-    :members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
