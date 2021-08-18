@@ -21,7 +21,7 @@ project = 'pynoteslib'
 year = '2021'
 author = 'Ian Stanley'
 copyright = '{0}, {1}'.format(year, author)
-version = release = '0.3.0'
+version = release = '0.4.0'
 sys.path.insert(0,os.path.abspath('../pynoteslib'))
 
 # next line turns on documenting __init__
