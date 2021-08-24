@@ -9,7 +9,8 @@ def test_copy_to_notebookfile():
     cf = nl.get_config()
     cf["gpgkey"] = TESTKEY
     nl.write_config(cf)
-    my = nl.Notes(title="copyto note", plaintext="Hello World")
+    my = nl.note_from_plaintext("Hello World")
+    my.title = "copyto note"
     my.encrypt()
     my.save_ciphertext()
     assert os.path.exists(nl.get_note_fullpath("copyto_note.asc"))
@@ -32,7 +33,8 @@ def test_copy_to_notebookfile_invalid_notebook():
     cf = nl.get_config()
     cf["gpgkey"] = TESTKEY
     nl.write_config(cf)
-    my = nl.Notes(title="copyto note fake notebook", plaintext="Hello World")
+    my = nl.note_from_plaintext("Hello World")
+    my.title = "copyto note fake notebook"
     my.encrypt()
     my.save_ciphertext()
     assert not nl.copy_to_notebook(my.filename, "NOTEBOOK_DOESNT_EXIST")

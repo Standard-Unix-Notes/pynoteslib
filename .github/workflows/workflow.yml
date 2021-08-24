@@ -8,10 +8,12 @@ jobs:
     - name: checkout source repo
       uses: actions/checkout@v2
 
+    - name: pip_install
+      run: pip install -r requirements.txt
+
     - name: isort
       run: |
-        pip install isort
-        isort .
+        isort pynoteslib tests
 
     - name: commit isort changes
       run: |
@@ -25,7 +27,9 @@ jobs:
         branch: ${{ github.ref }}
 
     - name: flake8
-      run: flake8 src/pynoteslib tests
+      run: |
+        flake8 pynoteslib tests
 
     - name: pylint
-      run: pylint src/pynoteslib tests
+      run: |
+        pylint pynoteslib
