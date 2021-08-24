@@ -25,7 +25,11 @@ jobs:
         branch: ${{ github.ref }}
 
     - name: flake8
-      run: flake8 src/pynoteslib tests
+      run: |
+        pip install flake8
+        flake8 pynoteslib
 
     - name: pylint
-      run: pylint src/pynoteslib tests
+      run: |
+        pip install pylint
+        pylint pynoteslib

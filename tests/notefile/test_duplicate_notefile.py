@@ -10,7 +10,8 @@ def test_duplicate_notefile():
     cf["gpgkey"] = TESTKEY
     nl.write_config(cf)
     nl.use_notebook()
-    my = nl.Notes(title="before dup note", plaintext="Hello World")
+    my = nl.note_from_plaintext("Hello World")
+    my.title = "before dup note"
     my.encrypt()
     my.save_ciphertext()
     assert os.path.exists(nl.get_note_fullpath(my.filename))
