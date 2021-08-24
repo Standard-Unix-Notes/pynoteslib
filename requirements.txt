@@ -57,7 +57,6 @@ pycodestyle==2.7.0
 pycparser==2.20
 pyflakes==2.3.1
 Pygments==2.9.0
--e git+git@github.com:Standard-Unix-Notes/pynoteslib.git@477ddfdb51a99815a95230a5f89b56372e7f5656#egg=pynoteslib
 pyparsing==2.4.7
 PyQt5==5.15.4
 PyQt5-Qt5==5.15.2
