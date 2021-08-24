@@ -5,8 +5,8 @@ import pynoteslib as nl
 
 def test_save_plaintext():
     nl.get_config()
-    n = nl.Notes(title="testing PT save")
-    n.set_plaintext("This is some text")
+    n = nl.note_from_plaintext("text for testing PT save")
+    n.title = "testing PT save"
     n.save_plaintext()
     assert os.path.exists(nl.get_note_fullpath("testing_PT_save"))
 

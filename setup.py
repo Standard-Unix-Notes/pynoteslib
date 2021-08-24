@@ -22,7 +22,7 @@ classifiers = [
 
 setuptools.setup(
     name="pynoteslib",
-    version="0.4.0",
+    version="0.5.0",
     license="MIT",
     description="Library of classes/functions for GPG encrypted notes",
     long_description=long_description,
@@ -36,9 +36,9 @@ setuptools.setup(
     python_requires=">=3.7",
     classifiers=classifiers,
     project_urls={
-      "Documentation": "https://pynoteslib.readthedocs.io/",
-      "Changelog": "https://pynoteslib.readthedocs.io/en/latest/changelog.html",
-      "Issue Tracker": "https://github.com/Standard-Unix-Notes/pynoteslib/issues",
+        "Documentation": "https://pynoteslib.readthedocs.io/",
+        "Changelog": "https://pynoteslib.readthedocs.io/en/latest/changelog.html",
+        "Issue Tracker": "https://github.com/Standard-Unix-Notes/pynoteslib/issues",
     },
     keywords=[
         "gnupg",

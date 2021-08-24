@@ -26,6 +26,8 @@ import tarfile
 import gnupg  # see https://docs.red-dove.com/python-gnupg/
 import toml
 
+__VERSION = "0.5.0"
+
 _default_config = {
     "gpgkey": "A692697DCC57084C4E87D66C7D34402EBB3EB284",
     "spelling": "none",
@@ -42,8 +44,13 @@ os.environ["NOTESDIR"] = os.getcwd() + "/__testing__/notesdir"
 GPGEXT = ".asc"
 
 
+def pynoteslib_version():
+    """Returns version no of library"""
+    return __VERSION
+
+
 def _init_dirs():  # pragma: no cover
-    """ Setup the NOTESDIR directory structure. _init_dirs() is called by
+    """Setup the NOTESDIR directory structure. _init_dirs() is called by
     create_config()
 
     1.  This function gets the base NOTESDIR from get_notedir() which in
@@ -68,7 +75,7 @@ def _init_dirs():  # pragma: no cover
 
 
 def create_config():
-    """ Create directory structure under NOTESDIR and TOML config file
+    """Create directory structure under NOTESDIR and TOML config file
     NOTESDIR/config
 
     :param: none
@@ -87,7 +94,7 @@ def create_config():
 
 
 def get_config():
-    """ Reads configuration from the TOML file NOTESDIR/config.
+    """Reads configuration from the TOML file NOTESDIR/config.
     If 'config' file does not exist, calls create_config() to create
 
     :param: none
@@ -104,7 +111,7 @@ def get_config():
 
 
 def write_config(conf):
-    """ Writes app configuration to TOML file NOTESDIR/config (see
+    """Writes app configuration to TOML file NOTESDIR/config (see
     _default_config as a sample structure)
 
     :param conf: Dictionary containing configuration data
@@ -121,7 +128,7 @@ def write_config(conf):
 
 
 def get_config_file():
-    """ Get the fullpath to the app configuration file NOTESDIR/config
+    """Get the fullpath to the app configuration file NOTESDIR/config
 
     :param: none
 
@@ -133,7 +140,7 @@ def get_config_file():
 
 
 def get_notesdir():
-    """ Gets the fullpath to the main app directory
+    """Gets the fullpath to the main app directory
 
     :param: none
 
@@ -144,13 +151,13 @@ def get_notesdir():
     if "NOTESDIR" in os.environ:
         notesdir = os.environ["NOTESDIR"]
     else:
-        notesdir = os.environ["HOME"] + "/.notes"
+        notesdir = os.environ["HOME"] + "/.notes"  # pragma: no cover
 
     return os.path.realpath(notesdir)
 
 
 def config_file_exists():
-    """ Checks to see if NOTESDIR/config file exists
+    """Checks to see if NOTESDIR/config file exists
 
     :param: none
 
@@ -161,8 +168,8 @@ def config_file_exists():
     return os.path.exists(get_config_file())
 
 
-def get_default_gpg_key():
-    """ Locates the first private key in the users GPG keyring
+def get_default_gpg_key():  # pragma: no cover
+    """Locates the first private key in the users GPG keyring
 
     Under testing conditions it returns the test@pynoteslib GPG key
     shown in _default_config['gpgkey'] to use in testing
@@ -179,14 +186,13 @@ def get_default_gpg_key():
     if "py.test" in sys.modules.keys():
         return _default_config["gpgkey"]
 
-    # pragma: no cover
     gpg = gnupg.GPG(gnupghome="/home/ian/.gnupg")
     private_keys = gpg.list_keys(True)
     return private_keys[0]["keyid"]
 
 
 def backup(conf):
-    """ Backup configuration, notes and notebook to tar file in the directory
+    """Backup configuration, notes and notebook to tar file in the directory
     above the NOTESDIR (default = HOME)
 
     :param: none
@@ -199,18 +205,14 @@ def backup(conf):
     conf = get_config()
     backupfile = f"{conf['notesdir']}/../notes_backup_{now.strftime('%Y%b%d_%H%M')}.tar"
 
-    try:
-        tar = tarfile.open(backupfile, "w")
+    with tarfile.open(backupfile, "w") as tar:
         tar.add(conf["notesdir"])
         tar.close()
         return True, backupfile
 
-    except tarfile.TarError as err:  # pragma: no cover
-        return err
-
 
 def get_default_notebook():
-    """ Reads config file and returns what notebook is the default
+    """Reads config file and returns what notebook is the default
 
     :param: none
 
@@ -223,7 +225,7 @@ def get_default_notebook():
 
 
 def get_use_notebook():
-    """ Reads config file and returns what notebook is currently used notebook
+    """Reads config file and returns what notebook is currently used notebook
 
     :param: none
 
@@ -236,7 +238,7 @@ def get_use_notebook():
 
 
 def default_notebook(notebook):
-    """ Set a notebook as th edefault notebook
+    """Set a notebook as th edefault notebook
     (use_notebook() defaults to the DEFAULT notebook if '' instead of
     a notebook title)
 
@@ -259,7 +261,7 @@ def default_notebook(notebook):
 
 
 def use_notebook(notebook=""):
-    """ Reads config file and returns the DEFAULT notebook.  If no notebook
+    """Reads config file and returns the DEFAULT notebook.  If no notebook
     is specified then the USE notebook is set to the DEFAULT notebook
 
     :param notebook: Title of notebook to USE, optional
@@ -284,7 +286,7 @@ def use_notebook(notebook=""):
 
 
 def get_notebooks():
-    """ Returns a list  of all notebooks in NOTESDIR
+    """Returns a list  of all notebooks in NOTESDIR
 
     :param: none
 
@@ -297,7 +299,7 @@ def get_notebooks():
 
 
 def get_notes(notebook=""):
-    """ Returns a list of note in given notebook (or the USE'd notebook)
+    """Returns a list of note in given notebook (or the USE'd notebook)
 
     :param notebook: Specified notebook to USE, defaults to DEFAULT notebook
     :type notebook: str, optional
@@ -319,7 +321,7 @@ def get_notes(notebook=""):
 
 
 def new_key(newkey):
-    """ Change encryption key for all notes. Traverses filesystem in
+    """Change encryption key for all notes. Traverses filesystem in
     NOTESDIR/[all notebooks]. Decrypts and re-encrypts with specified newkey
 
     :param newkey: New valid gpg privakey keyid
@@ -335,13 +337,12 @@ def new_key(newkey):
 
     # newkey -> config [picked up later by Notes.encrypt()]
     conf = get_config()
-    print(conf)
     conf["gpgkey"] = newkey
     write_config(conf)
 
     for notebook in get_notebooks():
         for note in get_notes(notebook=notebook):
-            target = Notes(filename=note)
+            target = load_note_from_file(note)
             target.decrypt()
             target.encrypt()
             target.save_ciphertext()
@@ -349,7 +350,7 @@ def new_key(newkey):
 
 
 def validate_gpg_key(gpgkeyid):
-    """ Validates the specified gpgkeyid is a private key in the user's
+    """Validates the specified gpgkeyid is a private key in the user's
     keyring
 
     :param: none
@@ -367,7 +368,7 @@ def validate_gpg_key(gpgkeyid):
 
 
 def get_fullpath(name):
-    """ Return full pathname of passed parameter
+    """Return full pathname of passed parameter
 
     :param name: A notebook, filename (eg. 'config') or expression`
     :type name: str
@@ -381,7 +382,7 @@ def get_fullpath(name):
 
 
 def get_note_fullpath(note, notebook=""):
-    """ Returns the full pathname of a note within the currently USE'd
+    """Returns the full pathname of a note within the currently USE'd
     Notebook
 
     :param note: The title (or filename) of a note
@@ -399,7 +400,7 @@ def get_note_fullpath(note, notebook=""):
 
 
 def change_spaces(string):
-    """ Returns a string with all spaces in 'string' have been replaced with '_'
+    """Returns a string with all spaces in 'string' have been replaced with '_'
 
     :param string: String to have spaces replaced
     :type: str
@@ -415,7 +416,7 @@ def change_spaces(string):
 
 
 def create_notebook(title):
-    """ Create a notebook with foldername 'title'
+    """Create a notebook with foldername 'title'
 
     :param title: title of notebook
     :type title: str
@@ -435,7 +436,7 @@ def create_notebook(title):
 
 
 def rename_notebook(oldtitle, newtitle):
-    """ Renames existing notebook oldtitle as newtitle
+    """Renames existing notebook oldtitle as newtitle
 
     :param oldtitle: Title of existing notebook
     :type oldtitle: str
@@ -457,7 +458,7 @@ def rename_notebook(oldtitle, newtitle):
 
 
 def duplicate_notebook(oldtitle, newtitle):
-    """ Duplicates an existing notebook oldtitle as newtitle with all notes duplicated.
+    """Duplicates an existing notebook oldtitle as newtitle with all notes duplicated.
 
     :param oldtitle: Title of existing notebook
     :type oldtitle: str
@@ -479,7 +480,7 @@ def duplicate_notebook(oldtitle, newtitle):
 
 
 def delete_notebook(title):
-    """ Deletes an existing notebook oldtitle and included notes
+    """Deletes an existing notebook oldtitle and included notes
 
     :param title: Title of existing notebook
     :type title: str
@@ -499,42 +500,8 @@ def delete_notebook(title):
 # ================= Note helper functions =================#
 
 
-def import_note(filename):
-    """ Creates and returns a note from a file assigning to plaintext or ciphertext
-
-    :param filename: FULLPATH of filename
-    :type filename: str
-
-    :return note: An object of class note containing contents of file
-    :rtype: Note object
-    """
-
-    if os.path.exists(filename):
-
-        mynote = Notes(filename)
-        _title, _ext = os.path.splitext(mynote.filename)
-
-        if _ext == GPGEXT:
-
-            # load cyphertext - edge case
-            # importing an already encrypted note
-            with open(mynote.filename, "r") as outp:  # pragma: no cover
-                mynote.ciphertext = outp.read()
-                mynote.plaintext = ""
-
-        else:
-            # load plaintext
-            with open(mynote.title, "r") as outp:
-                mynote.plaintext = outp.read()
-                mynote.ciphertext = ""
-
-        return mynote
-
-    return None
-
-
 def rename_note(oldname, newname):
-    """ Renames a note on disk inside the currently USE'd notebook
+    """Renames a note on disk inside the currently USE'd notebook
 
     :param oldname: The old filename for note
     :type oldname: str
@@ -562,7 +529,7 @@ def rename_note(oldname, newname):
 
 
 def duplicate_note(oldname, newname):
-    """ Duplicates an encrypted note on disk inside the currently USE'd notebook
+    """Duplicates an encrypted note on disk inside the currently USE'd notebook
 
     :param oldname:  The new filename for note
     :type oldname: str
@@ -589,7 +556,7 @@ def duplicate_note(oldname, newname):
 
 
 def delete_note(filename):
-    """ Deletes a note on disk inside the currently USE'd notebook
+    """Deletes a note on disk inside the currently USE'd notebook
 
     :param filename:            A string containing the filename of note to be deleted
     :type filename: str
@@ -607,7 +574,7 @@ def delete_note(filename):
 
 
 def copy_to_notebook(filename, notebook):
-    """ Copies note from current USE'd notebook to another notebook
+    """Copies note from current USE'd notebook to another notebook
 
     :param filename: The filename of note to be copied
     :type filename: str
@@ -615,7 +582,7 @@ def copy_to_notebook(filename, notebook):
     :param notebook: The target notebook name
     :type notebook: str
 
-    :returnl: True on successful copy
+    :return: True on successful copy
     :rtype: bool
     """
 
@@ -631,7 +598,7 @@ def copy_to_notebook(filename, notebook):
 
 
 def move_to_notebook(filename, notebook):
-    """ Moves a note from the currently USE'd notebook to another notebook
+    """Moves a note from the currently USE'd notebook to another notebook
 
     :param filename: The filename to move
     :type filename: str
@@ -658,61 +625,141 @@ def move_to_notebook(filename, notebook):
 # ==================== CLASS NOTES =====================#
 
 
+def load_note_from_file(filename):
+    """Opens file and assigns contents to plaintext or ciphertext
+
+    :param filename: fullpath of filename
+    :type filename: str
+
+    :return: returns success or failure
+    :rtype: bool
+    """
+
+    note = Notes()
+    note.filename = change_spaces(filename)
+
+    if not os.path.exists(get_note_fullpath(note.filename)):
+        raise FileNotFoundError
+
+    note.title, _ext = os.path.splitext(note.filename)
+
+    if _ext == GPGEXT:
+        note.load_ciphertext()
+    else:
+        note.load_plaintext()
+
+    return note
+
+
+def note_from_ciphertext(ciphertext):
+    """Creates note from supplied ciphertext
+
+    :param ciphertext: ciphertext of note
+    :type ciphertext: str
+
+    :returns: note
+    :rtype: class
+    """
+    note = Notes()
+    note.ciphertext = ciphertext
+    note.title = "MyEncryptedNote"
+    return note
+
+
+def note_from_plaintext(plaintext):
+    """Creates note from supplied plaintext
+
+    :param plaintext: plaintext of note
+    :type plaintext: str
+
+    :returns: note
+    :rtype: class
+    """
+    note = Notes()
+    note.plaintext = plaintext
+    note.title = "MyNote"
+    return note
+
+
+def import_note_from_file(filename):
+    """Imports note from file
+
+    :param filename: filename to be imported
+    :type filename: str
+
+    :returns: note
+    :rtype: class
+    """
+
+    note = Notes()
+    note.filename = filename
+
+    note.import_from_file()
+
+    return note
+
+
 class Notes:
-    """ Object for managing a noteand it's plaintext/ciphertext
+    """Object for managing a noteand it's plaintext/ciphertext
 
     Attributes:
 
         title:      title of note
         filename:   filename of note
+        fullpath:   full pathname of file containing note
         ciphertext: string containing the ciphertext of note
         plaintext:  string containing the plaintext of note
 
-    NB only one of either ciphertext or plaintext should be set at any time.
+    NB only one of either ciphertext or plaintext should be set at
+    any time.
     """
 
-    def __init__(self, title="", plaintext="", ciphertext="", filename=""):
-        """ Notes class constructor. Valid constructors:
+    def __init__(self):
+        """Notes class constructor. Do not use directly use one of the
+        following functions:
 
-            Note()
-
-            Note(title='my title')
-
-            Note(title='my title', plaintext='plaintext')
-
-            Note(title='my title', ciphertext='ascii encoded GPG ciphertext')
-
-            Note(filename='my note filename.asc')
-
-            Note(filename='my note filename')
-
-        :param title: Note title (filename derived from title), default to ''
-        :type title: str, optional
-
-        :param plaintext: Plaintext of note, default to ''
-        :type plaintext: str, optional
-
-        :param ciphertext: GPG encrypted Ciphertext, default to ''
-        :type ciphertext: str, optional
-
-        :param filename: filename for note including extension
-        :type filename: str
+            load_note_from_file(note_filename)
+            note_from_ciphertext(str)
+            note_from_plaintext(str)
+            import_note_from_file(filename)
         """
 
-        self.plaintext = plaintext
-        self.ciphertext = ciphertext
-        self.title = change_spaces(title)
-        self.filename = change_spaces(filename)
+        self._plaintext = ""
+        self._ciphertext = ""
+        self._title = ""
+        self._filename = ""
 
-        _config = get_config()
-        _gpghome = _config["HOME"] + "/.gnupg"
-        self.gpghandle = gnupg.GPG(gnupghome=_gpghome)
-        self.gpgkey = _config["gpgkey"]
+    @property
+    def title(self):
+        """title property of note"""
+        return self._title
+    @title.setter
+    def title(self, title):
+        self._title = self._filename = title.replace(" ", "_")
 
-        if filename == "":
-            self.set_filename(self.title)
-        else:
-            self.load_note(self.filename)
+    @property
+    def filename(self):
+        """filename property of note"""
+        return self._filename
+    @filename.setter
+    def filename(self, filename):
+        self._filename = filename.replace(" ", "_")
+
+    @property
+    def plaintext(self):
+        """plaintext property of note"""
+        return self._plaintext
+    @plaintext.setter
+    def plaintext(self, plaintext):
+        self._plaintext = plaintext
+
+    @property
+    def ciphertext(self):
+        """ciphertext property of note"""
+        return self._ciphertext
+    @ciphertext.setter
+    def ciphertext(self, ciphertext):
+        self._ciphertext = ciphertext
 
     def __repr__(self):
         return (
@@ -721,17 +768,17 @@ class Notes:
         )
 
     def add_extension(self):
-        """ Appends '.asc' to the basename of self.filename
+        """Appends '.asc' to the basename of self.filename
 
         :param: none
 
         :return: none
         """
 
-        self.filename = os.path.splitext(self.filename)[0] + GPGEXT
+        self._filename = os.path.splitext(self._filename)[0] + GPGEXT
 
     def remove_extension(self):  # pragma: no cover
-        """ Removes extension from self.filename
+        """Removes extension from self.filename
 
         :param: none
 
@@ -741,7 +788,7 @@ class Notes:
         self.filename = os.path.splitext(self.filename)[0]
 
     def get_extension(self):
-        """ Returns extension of self.filename
+        """Returns extension of self.filename
 
         :param: none
 
@@ -751,74 +798,8 @@ class Notes:
 
         return os.path.splitext(self.filename)[1]
 
-    def set_filename(self, filename):
-        """ Sets self.filename to 'filename'
-
-        :param: set self.filename to 'filename'
-        :type filename: str
-
-        :return: none
-        """
-
-        self.filename = change_spaces(filename)
-
-    def get_filename(self):
-        """ Gets self.filename
-
-        :param: none
-
-        :return: self.filename
-        :rtype: str
-        """
-
-        return self.filename
-
-    def set_plaintext(self, plaintext):
-        """ Sets self.plaintext = plaintext & self.ciphertext = ''
-
-        :param plaintext:                  String containing plaintext
-        :type plaintext:
-
-        :return: none
-        """
-
-        self.plaintext = plaintext
-        self.clear_ciphertext()
-
-    def set_ciphertext(self, ciphertext):
-        """ Sets self.ciphertext to ciphertext and
-        self.plaintext = ''. Appends .asc to filename
-
-        :param ciphertext: String containing the ciphertext
-        :type ciphertext: str
-
-        :return: none
-        """
-
-        self.ciphertext = ciphertext
-        self.clear_plaintext()
-        self.add_extension()
-
-    def clear_plaintext(self):
-        """ Sets self.plaintext to ''
-
-        :param: none
-        :return: none
-        """
-
-        self.plaintext = ""
-
-    def clear_ciphertext(self):
-        """ Sets self.ciphertext to ''
-
-        :param: none
-        :return: none
-        """
-
-        self.ciphertext = ""
-
     def save_ciphertext(self):
-        """ Saves Ciphertext of note to file named self.filename adding the extension '.asc'
+        """Saves Ciphertext of note to file named self.filename adding the extension '.asc'
 
         :param: none
 
@@ -826,15 +807,15 @@ class Notes:
         """
 
         if self.filename == "":
-            self.set_filename(self.title + GPGEXT)  # pragma: no cover
+            self.filename = self.title + GPGEXT  # pragma: no cover
         else:
-            self.set_filename(os.path.splitext(self.filename)[0] + GPGEXT)
+            self.filename = os.path.splitext(self.filename)[0] + GPGEXT
 
         with open(get_note_fullpath(self.filename), "w") as outp:
             outp.write(self.ciphertext)
 
     def save_plaintext(self):
-        """ Saves Plaintext of note to file named self.filename
+        """Saves Plaintext of note to file named self.filename
 
         :param: none
 
@@ -842,15 +823,29 @@ class Notes:
         """
 
         if self.filename == "":
-            self.set_filename(self.title)  # pragma: no cover
+            self.filename = self.title  # pragma: no cover
         else:
-            self.set_filename(os.path.splitext(self.filename)[0])
+            self.filename = os.path.splitext(self.filename)[0]
 
         with open(get_note_fullpath(self.title), "w") as outp:
             outp.write(self.plaintext)
 
     def load_ciphertext(self):
-        """ Loads ciphertext from file self.filename
+        """Loads ciphertext from file self.filename
+
+        :param: none
+
+        :return: none
+        """
+
+        self.filename = os.path.splitext(self.filename)[0] + GPGEXT
+
+        with open(get_note_fullpath(self.filename), "r") as outp:
+            self.ciphertext = outp.read()
+            self.plaintext = ""
+
+    def load_plaintext(self):
+        """Loads plaintext from file self.filename
 
         :param: none
 
@@ -858,46 +853,26 @@ class Notes:
         """
 
         with open(get_note_fullpath(self.filename), "r") as outp:
-            self.ciphertext = outp.read()
-            self.clear_plaintext()
+            self._plaintext = outp.read()
+            self._ciphertext = ""
 
-    def load_plaintext(self):
-        """ Loads plaintext from file self.filename
+    def import_from_file(self):
+        """Loads plaintext from file self.filename (fullpath)
 
         :param: none
 
         :return: none
         """
 
-        with open(get_note_fullpath(self.title), "r") as outp:
-            self.plaintext = outp.read()
-            self.clear_ciphertext()
-        print(self)
+        if not os.path.exists(self.filename):
+            raise FileNotFoundError
 
-    def load_note(self, filename):
-        """ Opens file self.filename and assigns to plaintext or ciphertext
-
-        :param filename: fullpath of filename
-        :type filename: str
-
-        :return: returns success or failure
-        :rtype: bool
-        """
-
-        if not os.path.exists(get_note_fullpath(filename)):
-            return False
-
-        self.title, _ext = os.path.splitext(self.filename)
-
-        if _ext == GPGEXT:
-            self.load_ciphertext()
-        else:
-            self.load_plaintext()
-
-        return True
+        with open(self.filename, "r") as outp:
+            self._plaintext = outp.read()
+            self._ciphertext = ""
 
     def is_encrypted(self):
-        """ Check if note is encrypted
+        """Check if note is encrypted
 
         :param: none
 
@@ -907,14 +882,18 @@ class Notes:
         return not self.ciphertext == ""
 
     def encrypt(self):
-        """ Encrypts self.plaintext -> selfciphertext and resets self.plaintext
+        """Encrypts self.plaintext -> selfciphertext and resets self.plaintext
 
         :return: self.ciphertext
         :rtype: str
         """
 
-        self.ciphertext = str(self.gpghandle.encrypt(self.plaintext, self.gpgkey))
-        self.clear_plaintext()
+        conf = get_config()
+
+        gpghandle = gnupg.GPG(gnupghome=conf["HOME"] + "/.gnupg")
+
+        self.ciphertext = str(gpghandle.encrypt(self.plaintext, conf["gpgkey"]))
+        self.plaintext = ""
 
         if self.get_extension() != GPGEXT:
             self.add_extension()
@@ -922,13 +901,17 @@ class Notes:
         return self.ciphertext
 
     def decrypt(self):
-        """ Encrypts self.plaintext -> selfciphertext and resets self.plaintext
+        """Encrypts self.plaintext -> selfciphertext and resets self.plaintext
 
         :return: self.ciphertext
         :rtype: str
         """
 
-        self.plaintext = str(self.gpghandle.decrypt(self.ciphertext))
-        self.clear_ciphertext()
+        conf = get_config()
+
+        gpghandle = gnupg.GPG(gnupghome=conf["HOME"] + "/.gnupg")
+
+        self.plaintext = str(gpghandle.decrypt(self.ciphertext))
+        self.ciphertext = ""
 
         return self.plaintext

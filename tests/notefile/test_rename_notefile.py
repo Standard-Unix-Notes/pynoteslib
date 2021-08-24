@@ -9,7 +9,8 @@ def test_rename_notefile():
     cf = nl.get_config()
     cf["gpgkey"] = TESTKEY
     nl.write_config(cf)
-    my = nl.Notes(title="before rename note", plaintext="Hello World")
+    my = nl.note_from_plaintext("Hello World")
+    my.title = "before rename note"
     my.encrypt()
     my.save_ciphertext()
     assert os.path.exists(nl.get_note_fullpath(my.filename))

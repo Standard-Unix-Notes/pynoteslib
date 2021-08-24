@@ -13,8 +13,8 @@ def test_new_key():
 
     # Create a note with TESTKEY1 (default in unittest)
     message = "This is some text to test new_key()"
-    n1 = nl.Notes(title="testing newkey")
-    n1.set_plaintext(message)
+    n1 = nl.note_from_plaintext(message)
+    n1.title = "testing newkey"
     n1.encrypt()
     n1.save_ciphertext()
     assert os.path.exists(nl.get_note_fullpath(n1.filename))
@@ -23,7 +23,7 @@ def test_new_key():
     assert nl.new_key(TESTKEY2)
 
     # import same key into new Notes object and decrypt
-    n2 = nl.Notes(filename="testing_newkey.asc")
+    n2 = nl.load_note_from_file("testing_newkey.asc")
     print(f"n2 => {n2}")
     assert n2.decrypt() == message
 
