@@ -7,6 +7,9 @@ jobs:
     steps:
     - name: checkout source repo
       uses: actions/checkout@v2
+      with:
+        github_token: ${{ secrets.GH_ACCESS_TOKEN }}
+        branch: ${{ github.ref }}
 
     - name: pip_install
       run: pip install -r requirements.txt
