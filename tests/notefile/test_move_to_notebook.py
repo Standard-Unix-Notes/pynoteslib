@@ -9,7 +9,8 @@ def test_move_to_notebook():
     cf = nl.get_config()
     cf["gpgkey"] = TESTKEY
     nl.write_config(cf)
-    my = nl.Notes(title="moveto note", plaintext="Hello World")
+    my = nl.note_from_plaintext("Hello World")
+    my.title = "moveto note"
     my.encrypt()
     my.save_ciphertext()
     assert os.path.exists(nl.get_note_fullpath("moveto_note.asc"))

@@ -2,7 +2,8 @@ import pynoteslib as nl
 
 
 def test_set_ciphertext():
-    my = nl.Notes(title="this is my note title")
+    my = nl.Notes()
+    my.title = "this is my note title"
     my.plaintext = "This is my secret in plaintext"
     assert "this_is_my_note_title" == my.title
     assert my.filename == "this_is_my_note_title"

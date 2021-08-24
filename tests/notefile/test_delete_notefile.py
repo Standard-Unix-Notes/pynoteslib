@@ -9,7 +9,8 @@ def test_delete_notefile():
     cf = nl.get_config()
     cf["gpgkey"] = TESTKEY
     nl.write_config(cf)
-    my = nl.Notes(title="delete note", plaintext="Hello World")
+    my = nl.note_from_plaintext("Hello World")
+    my.title = "delete note"
     my.encrypt()
     my.save_ciphertext()
     assert os.path.exists(nl.get_note_fullpath("delete_note.asc"))
