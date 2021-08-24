@@ -1,3 +1,4 @@
 [MESSAGES CONTROL]
 disable=
-    too-many-instance-attributes,  # <-- Ensure at least this entry.
+    too-many-instance-attributes,
+    unspecified-encoding
